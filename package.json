@@ -1,7 +1,7 @@
 {
   "name": "material-kit-react",
   "version": "3.0.0",
-  "author": "Devias",
+  "author": "Minds",
   "licence": "MIT",
   "homepage": "https://devias.io",
   "private": false,
@@ -25,7 +25,9 @@
     "@mui/x-date-pickers": "5.0.19",
     "apexcharts": "3.37.0",
     "date-fns": "2.29.3",
+    "dayjs": "^1.11.10",
     "formik": "2.2.9",
+    "moment": "^2.29.4",
     "next": "13.1.6",
     "nprogress": "0.2.0",
     "prop-types": "15.8.1",
