@@ -59,7 +59,8 @@ export const PenjualanTable = (props) => {
                 <TableCell>No</TableCell>
                 <TableCell>Tanggal</TableCell>
                 <TableCell>Nomor Transaksi</TableCell>
-                <TableCell>Nominal</TableCell>
+                <TableCell>Kode Barang</TableCell>
+                <TableCell>Quantity</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -83,7 +84,8 @@ export const PenjualanTable = (props) => {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{customer.tanggal}</TableCell>
                     <TableCell>{customer.nomor}</TableCell>
-                    <TableCell>{getPrice(customer.nominal)}</TableCell>
+                    <TableCell>{customer.kode}</TableCell>
+                    <TableCell>{customer.qty}</TableCell>
                   </TableRow>
                 );
               })}

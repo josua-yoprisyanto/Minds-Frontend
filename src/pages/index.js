@@ -33,7 +33,7 @@ const Page = () => (
         <Grid container spacing={3}>
           <Grid xs={12} sm={6} lg={6}>
             <OverviewBudget
-              title="Jumlah Transaksi"
+              title="Nominal Kas"
               value="100"
               iconColor="orange"
               icon={<ShoppingCartIcon />}

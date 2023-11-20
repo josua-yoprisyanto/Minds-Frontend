@@ -60,8 +60,8 @@ export const PembelianTable = (props) => {
                 <TableCell>Tanggal</TableCell>
                 <TableCell>Invoice</TableCell>
                 <TableCell>Supplier</TableCell>
-                <TableCell>Akun Persediaan Barang</TableCell>
-                <TableCell>Nominal</TableCell>
+                <TableCell>Kode Barang</TableCell>
+                <TableCell>Quantity</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
@@ -87,8 +87,8 @@ export const PembelianTable = (props) => {
                     <TableCell>{customer.tanggal}</TableCell>
                     <TableCell>{customer.invoice}</TableCell>
                     <TableCell>{customer.supplier}</TableCell>
-                    <TableCell>{customer.akun}</TableCell>
-                    <TableCell>{getPrice(customer.nominal)}</TableCell>
+                    <TableCell>{customer.kode}</TableCell>
+                    <TableCell>{customer.qty}</TableCell>
                     <TableCell>{customer.status}</TableCell>
                   </TableRow>
                 );

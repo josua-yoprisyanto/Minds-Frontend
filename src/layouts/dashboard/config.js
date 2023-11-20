@@ -11,6 +11,7 @@ import BookIcon from "@heroicons/react/24/solid/BookOpenIcon";
 import BoxIcon from "@heroicons/react/24/solid/ArchiveBoxIcon";
 import CartIcon from "@heroicons/react/24/solid/ShoppingCartIcon";
 import MoneyIcon from "@heroicons/react/24/solid/CurrencyDollarIcon";
+import ArrowDownCircleIcon from "@heroicons/react/24/solid/ArrowDownCircleIcon";
 import NoteIcon from "@heroicons/react/24/solid/BanknotesIcon";
 import { SvgIcon } from "@mui/material";
 
@@ -72,6 +73,15 @@ export const items = [
           </SvgIcon>
         ),
       },
+      {
+        title: "Penerimaan",
+        path: "/penerimaan",
+        icon: (
+          <SvgIcon fontSize="small">
+            <ArrowDownCircleIcon />
+          </SvgIcon>
+        ),
+      },
     ],
     icon: (
       <SvgIcon fontSize="small">
@@ -88,93 +98,6 @@ export const items = [
       </SvgIcon>
     ),
   },
-  // {
-  //   title: "Laporan",
-  //   dropdowns: [
-  //     {
-  //       title: "Neraca",
-  //       path: "/neraca",
-  //     },
-  //     {
-  //       title: "Laba rugi",
-  //       path: "/laba-rugi",
-  //     },
-  //     {
-  //       title: "Arus Kas",
-  //       path: "/arus-kas",
-  //     },
-  //   ],
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <UsersIcon />
-  //     </SvgIcon>
-  //   ),
-  // },
-  // {
-  //   title: "Customers",
-  //   path: "/customers",
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <UsersIcon />
-  //     </SvgIcon>
-  //   ),
-  // },
-
-  // {
-  //   title: "Daftar Akun",
-  //   path: "/akun",
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <UsersIcon />
-  //     </SvgIcon>
-  //   ),
-  // },
-
-  // {
-  //   title: "Account",
-  //   path: "/account",
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <UserIcon />
-  //     </SvgIcon>
-  //   ),
-  // },
-  // {
-  //   title: "Settings",
-  //   path: "/settings",
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <CogIcon />
-  //     </SvgIcon>
-  //   ),
-  // },
-  // {
-  //   title: "Login",
-  //   path: "/auth/login",
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <LockClosedIcon />
-  //     </SvgIcon>
-  //   ),
-  // },
-  // {
-  //   title: "Register",
-  //   path: "/auth/register",
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <UserPlusIcon />
-  //     </SvgIcon>
-  //   ),
-  // },
-  // {
-  //   title: "Error",
-  //   path: "/404",
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <XCircleIcon />
-  //     </SvgIcon>
-  //   ),
-  // },
 ];
 
 export const inputItems = [
@@ -188,12 +111,21 @@ export const inputItems = [
     ),
   },
   {
-    title: "Accounting",
-    path: "/lain-lain",
+    title: "Penjualan Stock",
+    path: "/penjualan-stock",
     icon: (
       <SvgIcon fontSize="small">
-        <MoneyIcon />
+        <NoteIcon />
       </SvgIcon>
     ),
   },
+  // {
+  //   title: "Accounting",
+  //   path: "/lain-lain",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <MoneyIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
 ];

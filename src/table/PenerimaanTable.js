@@ -18,7 +18,7 @@ import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
 import { getPrice } from "src/utils/getPrice";
 
-export const PembayaranTable = (props) => {
+export const PenerimaanTable = (props) => {
   const {
     count = 0,
     items = [],
@@ -57,7 +57,7 @@ export const PembayaranTable = (props) => {
                   />
                 </TableCell>
                 <TableCell>No</TableCell>
-                <TableCell>No. Invoice</TableCell>
+                <TableCell>Nomor Transaksi</TableCell>
                 <TableCell>Kode Barang</TableCell>
                 <TableCell>Quantity</TableCell>
                 <TableCell>Nominal</TableCell>
@@ -82,7 +82,8 @@ export const PembayaranTable = (props) => {
                       />
                     </TableCell>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{customer.invoice}</TableCell>
+                    <TableCell>{customer.tanggal}</TableCell>
+                    <TableCell>{customer.nomor}</TableCell>
                     <TableCell>{customer.kode}</TableCell>
                     <TableCell>{customer.qty}</TableCell>
                     <TableCell>{customer.nominal}</TableCell>
@@ -106,7 +107,7 @@ export const PembayaranTable = (props) => {
   );
 };
 
-PembayaranTable.propTypes = {
+PenerimaanTable.propTypes = {
   count: PropTypes.number,
   items: PropTypes.array,
   onDeselectAll: PropTypes.func,

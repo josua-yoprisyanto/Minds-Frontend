@@ -7,100 +7,115 @@ import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { applyPagination } from "src/utils/apply-pagination";
 import { SearchBar } from "src/components/SearchBar";
-import { AccountTable } from "src/table/AccountTable";
-import AddAccountModal from "src/components/Modal/AddAccountModal";
+import { PembelianTable } from "src/table/PembelianTable";
+import { PenerimaanTable } from "src/table/PenerimaanTable";
 
 const data = [
   {
     id: 1,
-    no_akun: 101,
-    nama: "Kas",
-    tipe: "Aktiva",
-    nominal: 1000,
+    tanggal: "2023-10-20",
+    nomor: "A001",
+    kode: "qwq",
+    nominal: 10000,
+    qty: 12,
   },
   {
     id: 2,
-    no_akun: 201,
-    nama: "Hutang Usaha",
-    tipe: "Liabilitas",
-    nominal: 1000,
+    tanggal: "2023-10-21",
+    nomor: "B002",
+    kode: "qwq",
+    nominal: 10000,
+    qty: 12,
   },
   {
     id: 3,
-    no_akun: 301,
-    nama: "Pendapatan",
-    tipe: "Pendapatan",
-    nominal: 1000,
+    tanggal: "2023-10-22",
+    nomor: "C003",
+    nominal: 7500,
+    kode: "qwq",
+    qty: 12,
   },
   {
     id: 4,
-    no_akun: 401,
-    nama: "Peralatan",
-    tipe: "Aktiva",
-    nominal: 1000,
+    tanggal: "2023-10-23",
+    nomor: "D004",
+    nominal: 10000,
+
+    kode: "qwq",
+    qty: 12,
   },
   {
     id: 5,
-    no_akun: 501,
-    nama: "Modal Pemilik",
-    tipe: "Ekuitas",
-    nominal: 1000,
+    tanggal: "2023-10-24",
+    nomor: "E005",
+    nominal: 10000,
+
+    kode: "qwq",
+    qty: 12,
   },
   {
     id: 6,
-    no_akun: 601,
-    nama: "Beban Operasional",
-    tipe: "Beban",
-    nominal: 1000,
+    tanggal: "2023-10-25",
+    nomor: "F006",
+    kode: "qwq",
+    qty: 12,
   },
   {
     id: 7,
-    no_akun: 701,
-    nama: "Utang Bank",
-    tipe: "Liabilitas",
-    nominal: 1000,
+    tanggal: "2023-10-26",
+    nomor: "G007",
+    nominal: 10000,
+
+    kode: "qwq",
+    qty: 12,
   },
   {
     id: 8,
-    no_akun: 801,
-    nama: "Dividen",
-    tipe: "Ekuitas",
-    nominal: 1000,
+    tanggal: "2023-10-27",
+    nomor: "H008",
+    nominal: 10000,
+
+    kode: "qwq",
+    qty: 12,
   },
   {
     id: 9,
-    no_akun: 901,
-    nama: "Penjualan",
-    tipe: "Pendapatan",
-    nominal: 1000,
+    tanggal: "2023-10-28",
+    nomor: "I009",
+    nominal: 10000,
+
+    kode: "qwq",
+    qty: 12,
   },
   {
     id: 10,
-    no_akun: 1001,
-    nama: "Persediaan",
-    tipe: "Aktiva",
-    nominal: 1000,
+    tanggal: "2023-10-29",
+    nomor: "J010",
+    nominal: 10000,
+
+    kode: "qwq",
+    qty: 12,
   },
 ];
 
-const useAccounts = (page, rowsPerPage) => {
+const useBuys = (page, rowsPerPage) => {
   return useMemo(() => {
     return applyPagination(data, page, rowsPerPage);
   }, [page, rowsPerPage]);
 };
 
-const useAccountIds = (stocks) => {
+const useBuyIds = (buys) => {
   return useMemo(() => {
-    return stocks.map((customer) => customer.id);
-  }, [stocks]);
+    return buys.map((customer) => customer.id);
+  }, [buys]);
 };
 
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const accounts = useAccounts(page, rowsPerPage);
-  const accountsIds = useAccountIds(accounts);
-  const accountsSelection = useSelection(accountsIds);
+  const buys = useBuys(page, rowsPerPage);
+  const buysIds = useBuyIds(buys);
+  const buysSelection = useSelection(buysIds);
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -110,12 +125,10 @@ const Page = () => {
     setRowsPerPage(event.target.value);
   }, []);
 
-  const [openAccountModal, setOpenAccountModal] = useState(false);
-
   return (
     <>
       <Head>
-        <title>Daftar Akun | Minds</title>
+        <title>Jurnal Penerimaan | Minds</title>
       </Head>
       <Box
         component="main"
@@ -128,7 +141,7 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Daftar Akun</Typography>
+                <Typography variant="h4">Jurnal Penerimaan</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
@@ -142,7 +155,7 @@ const Page = () => {
                   </Button>
                 </Stack>
               </Stack>
-              <div>
+              {/* <div>
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">
@@ -150,31 +163,28 @@ const Page = () => {
                     </SvgIcon>
                   }
                   variant="contained"
-                  onClick={() => setOpenAccountModal(true)}
                 >
                   Add
                 </Button>
-              </div>
+              </div> */}
             </Stack>
-            <SearchBar placeholder="Cari Daftar Akun" />
-            <AccountTable
+            <SearchBar placeholder="Cari Jurnal Penerimaan" />
+            <PenerimaanTable
               count={data.length}
-              items={accounts}
-              onDeselectAll={accountsSelection.handleDeselectAll}
-              onDeselectOne={accountsSelection.handleDeselectOne}
+              items={buys}
+              onDeselectAll={buysSelection.handleDeselectAll}
+              onDeselectOne={buysSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={accountsSelection.handleSelectAll}
-              onSelectOne={accountsSelection.handleSelectOne}
+              onSelectAll={buysSelection.handleSelectAll}
+              onSelectOne={buysSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={accountsSelection.selected}
+              selected={buysSelection.selected}
             />
           </Stack>
         </Container>
       </Box>
-
-      <AddAccountModal open={openAccountModal} handleClose={() => setOpenAccountModal(false)} />
     </>
   );
 };

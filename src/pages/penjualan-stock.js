@@ -5,6 +5,7 @@ import {
   Container,
   Divider,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -34,10 +35,12 @@ const Page = () => {
 
   const [status, setStatus] = useState("");
 
+  const [items, setItems] = useState([{}]);
+
   return (
     <>
       <Head>
-        <title>Pembelian Stock | Minds</title>
+        <title>Penjualan Stock | Minds</title>
       </Head>
       <Box
         component="main"
@@ -62,44 +65,62 @@ const Page = () => {
                 fontWeight: "600",
               }}
             >
-              Jurnal Pembelian
+              Jurnal Penjualan
             </Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DesktopDatePicker
-                label="Tanggal"
-                inputFormat="DD-MM-YYYY"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
+
+            <Typography variant="h6">Akun Tambah</Typography>
 
             <Autocomplete
               disablePortal
               fullWidth
               id="combo-box-demo"
               options={top100Films}
-              renderInput={(params) => <TextField {...params} label="Supplier" />}
+              renderInput={(params) => <TextField {...params} label="Akun" />}
             />
-            <TextField sx={{ mt: 1 }} fullWidth label="No. Invoice" name="invoice" type="text" />
-            <TextField sx={{ mt: 1 }} fullWidth label="Kode" name="kode" type="text" />
-            <TextField sx={{ mt: 1 }} fullWidth label="Quantity" name="qty" type="text" />
-            <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel id="demo-simple-select-filled-label">Status</InputLabel>
-              <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <MenuItem value={"ongoing"}>Ongoing</MenuItem>
-                <MenuItem value={"pending"}>Pending</MenuItem>
-                <MenuItem value={"done"}>Done</MenuItem>
-              </Select>
-            </FormControl>
+            <TextField sx={{ mt: 1 }} fullWidth label="Nominal" name="nominal" type="text" />
 
-            <TextField sx={{ mt: 1 }} fullWidth label="Harga Beli" name="harga_beli" type="text" />
-            <TextField sx={{ mt: 1 }} fullWidth label="Harga Jual" name="harga_jual" type="text" />
+            <Typography variant="h6">Akun Kurang</Typography>
+
+            <Autocomplete
+              disablePortal
+              fullWidth
+              id="combo-box-demo"
+              options={top100Films}
+              renderInput={(params) => <TextField {...params} label="Akun" />}
+            />
+            <TextField sx={{ mt: 1 }} fullWidth label="Nominal" name="Nominal" type="text" />
+
+            <Typography variant="h6">Stock</Typography>
+
+            {items.map((item, index) => (
+              <Grid container key={index}>
+                <Grid item xs={10} md={10} lg={10}>
+                  <Autocomplete
+                    disablePortal
+                    fullWidth
+                    id="combo-box-demo"
+                    options={top100Films}
+                    renderInput={(params) => <TextField {...params} label="Supplier" />}
+                  />
+                </Grid>
+                <Grid item xs={2} md={2} lg={2}>
+                  <TextField sx={{ mt: 1 }} label="Quantity" name="qty" type="text" />
+                </Grid>
+              </Grid>
+            ))}
+
+            <Button
+              onClick={() => {
+                let arr = [...items];
+
+                arr.push({});
+
+                setItems(arr);
+              }}
+            >
+              Add Item
+            </Button>
+
             <Box
               sx={{
                 display: "flex",

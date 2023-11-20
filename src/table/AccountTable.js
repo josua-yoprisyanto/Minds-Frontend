@@ -57,6 +57,7 @@ export const AccountTable = (props) => {
                 <TableCell>No. Akun</TableCell>
                 <TableCell>Nama</TableCell>
                 <TableCell>Tipe</TableCell>
+                <TableCell>Nominal</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -80,6 +81,7 @@ export const AccountTable = (props) => {
                     <TableCell>{customer.no_akun}</TableCell>
                     <TableCell>{customer.nama}</TableCell>
                     <TableCell>{customer.tipe}</TableCell>
+                    <TableCell>{customer.nominal}</TableCell>
                   </TableRow>
                 );
               })}
