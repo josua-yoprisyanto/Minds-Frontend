@@ -3,9 +3,11 @@ import { format } from "date-fns";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Checkbox,
   Stack,
+  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -16,6 +18,11 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
+import EditIcon from "@heroicons/react/20/solid/PencilSquareIcon";
+import TrashIcon from "@heroicons/react/20/solid/TrashIcon";
+import { useState } from "react";
+import axios from "axios";
+import { getToken } from "src/utils/getToken";
 
 export const SupplierTable = (props) => {
   const {
@@ -30,10 +37,31 @@ export const SupplierTable = (props) => {
     page = 0,
     rowsPerPage = 0,
     selected = [],
+    setIsLoading,
+    handleEditSupplier,
   } = props;
 
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
+
+  const token = getToken();
+
+  const handleDeleteSupplier = async (id) => {
+    setIsLoading(true);
+    const { data } = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/supplier/${id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+    if (data.success) {
+      setIsLoading(false);
+    } else {
+      helpers.setStatus({ success: false });
+      helpers.setErrors({ submit: data.message });
+      helpers.setSubmitting(false);
+    }
+  };
 
   return (
     <Card>
@@ -59,34 +87,63 @@ export const SupplierTable = (props) => {
                 <TableCell>Email</TableCell>
                 <TableCell>No. Telp</TableCell>
                 <TableCell>Alamat</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Aksi</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer) => {
-                const isSelected = selected.includes(customer.id);
+              {items.map((supplier) => {
+                const isSelected = selected.includes(supplier.id);
 
                 return (
-                  <TableRow hover key={customer.id} selected={isSelected}>
+                  <TableRow hover key={supplier.id} selected={isSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(customer.id);
+                            onSelectOne?.(supplier.id);
                           } else {
-                            onDeselectOne?.(customer.id);
+                            onDeselectOne?.(supplier.id);
                           }
                         }}
                       />
                     </TableCell>
                     <TableCell>
                       <Stack alignItems="center" direction="row" spacing={2}>
-                        <Typography variant="subtitle2">{customer.name}</Typography>
+                        <Typography variant="subtitle2">{supplier.name}</Typography>
                       </Stack>
                     </TableCell>
-                    <TableCell>{customer.email}</TableCell>
-                    <TableCell>{customer.phone}</TableCell>
-                    <TableCell>{customer.address}</TableCell>
+                    <TableCell>{supplier.email}</TableCell>
+                    <TableCell>0{supplier.phone_number}</TableCell>
+                    <TableCell style={{ wordWrap: "break-word" }}>{supplier.address}</TableCell>
+                    <TableCell
+                      style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <EditIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                        style={{ backgroundColor: "green", color: "white" }}
+                        onClick={() => handleEditSupplier(supplier.id)}
+                      >
+                        Ubah
+                      </Button>
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <TrashIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                        style={{ marginLeft: 10, backgroundColor: "red", color: "white" }}
+                        onClick={() => handleDeleteSupplier(supplier.id)}
+                      >
+                        Hapus
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,8 @@ import {
 } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
+import axios from "axios";
+import { getToken } from "src/utils/getToken";
 
 const Page = () => {
   const router = useRouter();
@@ -26,7 +28,7 @@ const Page = () => {
   const formik = useFormik({
     initialValues: {
       email: "admin@admin.com",
-      password: "Password123!",
+      password: "123456",
       submit: null,
     },
     validationSchema: Yup.object({
@@ -34,12 +36,24 @@ const Page = () => {
       password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
-      try {
-        await auth.signIn(values.email, values.password);
+      const reqBody = {
+        email: values.email,
+        password: values.password,
+      };
+
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+        reqBody
+      );
+
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        console.log("hi");
+
         router.push("/");
-      } catch (err) {
+      } else {
         helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
+        helpers.setErrors({ submit: data.message });
         helpers.setSubmitting(false);
       }
     },
@@ -48,11 +62,6 @@ const Page = () => {
   const handleMethodChange = useCallback((event, value) => {
     setMethod(value);
   }, []);
-
-  const handleSkip = useCallback(() => {
-    auth.skip();
-    router.push("/");
-  }, [auth, router]);
 
   return (
     <>
@@ -93,7 +102,7 @@ const Page = () => {
             </Stack>
             <Tabs onChange={handleMethodChange} sx={{ mb: 3 }} value={method}>
               <Tab label="Email" value="email" />
-              <Tab label="Phone Number" value="phoneNumber" />
+              {/* <Tab label="Phone Number" value="phoneNumber" /> */}
             </Tabs>
             {method === "email" && (
               <form noValidate onSubmit={formik.handleSubmit}>
@@ -135,7 +144,7 @@ const Page = () => {
                 </Button> */}
                 {/* <Alert color="primary" severity="info" sx={{ mt: 3 }}>
                   <div>
-                    You can use <b>demo@devias.io</b> and password <b>Password123!</b>
+                    You can use <b>demo@devias.io</b> and password <b>123456</b>
                   </div>
                 </Alert> */}
               </form>

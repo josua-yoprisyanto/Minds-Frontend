@@ -1,104 +1,49 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
-import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Stack,
+  SvgIcon,
+  Typography,
+} from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { applyPagination } from "src/utils/apply-pagination";
 import { SearchBar } from "src/components/SearchBar";
 import { AccountTable } from "src/table/AccountTable";
 import AddAccountModal from "src/components/Modal/AddAccountModal";
+import { CSVLink } from "react-csv";
+import { getToken } from "src/utils/getToken";
+import axios from "axios";
 
-const data = [
-  {
-    id: 1,
-    no_akun: 101,
-    nama: "Kas",
-    tipe: "Aktiva",
-    nominal: 1000,
-  },
-  {
-    id: 2,
-    no_akun: 201,
-    nama: "Hutang Usaha",
-    tipe: "Liabilitas",
-    nominal: 1000,
-  },
-  {
-    id: 3,
-    no_akun: 301,
-    nama: "Pendapatan",
-    tipe: "Pendapatan",
-    nominal: 1000,
-  },
-  {
-    id: 4,
-    no_akun: 401,
-    nama: "Peralatan",
-    tipe: "Aktiva",
-    nominal: 1000,
-  },
-  {
-    id: 5,
-    no_akun: 501,
-    nama: "Modal Pemilik",
-    tipe: "Ekuitas",
-    nominal: 1000,
-  },
-  {
-    id: 6,
-    no_akun: 601,
-    nama: "Beban Operasional",
-    tipe: "Beban",
-    nominal: 1000,
-  },
-  {
-    id: 7,
-    no_akun: 701,
-    nama: "Utang Bank",
-    tipe: "Liabilitas",
-    nominal: 1000,
-  },
-  {
-    id: 8,
-    no_akun: 801,
-    nama: "Dividen",
-    tipe: "Ekuitas",
-    nominal: 1000,
-  },
-  {
-    id: 9,
-    no_akun: 901,
-    nama: "Penjualan",
-    tipe: "Pendapatan",
-    nominal: 1000,
-  },
-  {
-    id: 10,
-    no_akun: 1001,
-    nama: "Persediaan",
-    tipe: "Aktiva",
-    nominal: 1000,
-  },
-];
-
-const useAccounts = (page, rowsPerPage) => {
+const useAccounts = (data, page, rowsPerPage) => {
   return useMemo(() => {
     return applyPagination(data, page, rowsPerPage);
-  }, [page, rowsPerPage]);
+  }, [data, page, rowsPerPage]);
 };
 
-const useAccountIds = (stocks) => {
+const useAccountIds = (account) => {
   return useMemo(() => {
-    return stocks.map((customer) => customer.id);
-  }, [stocks]);
+    return account.map((customer) => customer.id);
+  }, [account]);
 };
 
 const Page = () => {
+  const [accountData, setAccountData] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState(0);
+
+  const [exportDatas, setExportDatas] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const accounts = useAccounts(page, rowsPerPage);
+  const accounts = useAccounts(accountData, page, rowsPerPage);
   const accountsIds = useAccountIds(accounts);
   const accountsSelection = useSelection(accountsIds);
 
@@ -111,6 +56,53 @@ const Page = () => {
   }, []);
 
   const [openAccountModal, setOpenAccountModal] = useState(false);
+
+  const token = getToken();
+
+  console.log(accountData);
+  console.log(accounts);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const handleFetchAccount = async () => {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/account/`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response?.data?.success) {
+        const exportTitle = [["No Akun", "Nama", "Tipe", "Nominal"]];
+
+        response.data.data.length > 0
+          ? response.data.data.map((s) => {
+              exportTitle.push([s.account_number, s.name, s.type, s.nominal]);
+            })
+          : exportTitle.push([]);
+
+        setExportDatas(exportTitle);
+
+        setAccountData(response.data.data);
+        setIsLoading(false);
+      }
+    };
+    handleFetchAccount();
+  }, [token, isLoading]);
+
+  const handleEditAccount = async (id) => {
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/account/${id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+    setSelectedAccount(data.data);
+    setOpenAccountModal(true);
+  };
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <>
@@ -138,7 +130,9 @@ const Page = () => {
                       </SvgIcon>
                     }
                   >
-                    Export
+                    <CSVLink style={{ textDecoration: "none" }} data={exportDatas}>
+                      Export
+                    </CSVLink>
                   </Button>
                 </Stack>
               </Stack>
@@ -158,7 +152,7 @@ const Page = () => {
             </Stack>
             <SearchBar placeholder="Cari Daftar Akun" />
             <AccountTable
-              count={data.length}
+              count={accountData.length}
               items={accounts}
               onDeselectAll={accountsSelection.handleDeselectAll}
               onDeselectOne={accountsSelection.handleDeselectOne}
@@ -169,12 +163,25 @@ const Page = () => {
               page={page}
               rowsPerPage={rowsPerPage}
               selected={accountsSelection.selected}
+              setIsLoading={setIsLoading}
+              handleEditAccount={handleEditAccount}
             />
           </Stack>
         </Container>
       </Box>
 
-      <AddAccountModal open={openAccountModal} handleClose={() => setOpenAccountModal(false)} />
+      {openAccountModal && (
+        <AddAccountModal
+          open={openAccountModal}
+          handleClose={() => {
+            setOpenAccountModal(false);
+            setSelectedAccount();
+          }}
+          setIsLoading={setIsLoading}
+          isLoading={isLoading}
+          selectedAccount={selectedAccount}
+        />
+      )}
     </>
   );
 };

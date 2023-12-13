@@ -1,15 +1,25 @@
+import React, { useState } from "react";
 import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import { Card, InputAdornment, OutlinedInput, SvgIcon } from "@mui/material";
 
 export const SearchBar = (props) => {
-  const { placeholder } = props;
+  const { placeholder, value, onChange } = props;
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleInputChange = (e) => {
+    setSearchValue(e.target.value);
+    if (onChange) {
+      onChange(e);
+    }
+  };
 
   return (
     <Card sx={{ p: 2 }}>
       <OutlinedInput
-        defaultValue=""
         fullWidth
         placeholder={placeholder}
+        value={value}
+        onChange={handleInputChange}
         startAdornment={
           <InputAdornment position="start">
             <SvgIcon color="action" fontSize="small">
@@ -17,7 +27,6 @@ export const SearchBar = (props) => {
             </SvgIcon>
           </InputAdornment>
         }
-        sx={{ maxWidth: 500 }}
       />
     </Card>
   );

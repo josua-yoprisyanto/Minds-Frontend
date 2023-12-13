@@ -3,9 +3,11 @@ import { format } from "date-fns";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Checkbox,
   Stack,
+  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -15,6 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
+import EditIcon from "@heroicons/react/20/solid/PencilSquareIcon";
+import TrashIcon from "@heroicons/react/20/solid/TrashIcon";
+import { getToken } from "src/utils/getToken";
+import axios from "axios";
 
 export const AccountTable = (props) => {
   const {
@@ -29,10 +35,31 @@ export const AccountTable = (props) => {
     page = 0,
     rowsPerPage = 0,
     selected = [],
+    setIsLoading,
+    handleEditAccount,
   } = props;
 
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
+
+  const token = getToken();
+
+  const handleDeleteAccount = async (id) => {
+    setIsLoading(true);
+    const { data } = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/account/${id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+    if (data.success) {
+      setIsLoading(false);
+    } else {
+      helpers.setStatus({ success: false });
+      helpers.setErrors({ submit: data.message });
+      helpers.setSubmitting(false);
+    }
+  };
 
   return (
     <Card>
@@ -58,30 +85,59 @@ export const AccountTable = (props) => {
                 <TableCell>Nama</TableCell>
                 <TableCell>Tipe</TableCell>
                 <TableCell>Nominal</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Aksi</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer, index) => {
-                const isSelected = selected.includes(customer.id);
+              {items.map((account, index) => {
+                const isSelected = selected.includes(account.id);
 
                 return (
-                  <TableRow hover key={customer.id} selected={isSelected}>
+                  <TableRow hover key={account.id} selected={isSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(customer.id);
+                            onSelectOne?.(account.id);
                           } else {
-                            onDeselectOne?.(customer.id);
+                            onDeselectOne?.(account.id);
                           }
                         }}
                       />
                     </TableCell>
-                    <TableCell>{customer.no_akun}</TableCell>
-                    <TableCell>{customer.nama}</TableCell>
-                    <TableCell>{customer.tipe}</TableCell>
-                    <TableCell>{customer.nominal}</TableCell>
+                    <TableCell>{account.account_number}</TableCell>
+                    <TableCell>{account.name}</TableCell>
+                    <TableCell>{account.type}</TableCell>
+                    <TableCell>{account.nominal}</TableCell>
+                    <TableCell
+                      style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <EditIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                        style={{ backgroundColor: "green", color: "white" }}
+                        onClick={() => handleEditAccount(account.id)}
+                      >
+                        Ubah
+                      </Button>
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <TrashIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                        style={{ marginLeft: 10, backgroundColor: "red", color: "white" }}
+                        onClick={() => handleDeleteAccount(account.id)}
+                      >
+                        Hapus
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}

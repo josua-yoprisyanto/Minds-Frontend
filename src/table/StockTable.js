@@ -3,9 +3,11 @@ import { format } from "date-fns";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Checkbox,
   Stack,
+  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -17,6 +19,8 @@ import {
 import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
 import { getPrice } from "src/utils/getPrice";
+import EditIcon from "@heroicons/react/20/solid/PencilSquareIcon";
+import TrashIcon from "@heroicons/react/20/solid/TrashIcon";
 
 export const StockTable = (props) => {
   const {
@@ -62,13 +66,13 @@ export const StockTable = (props) => {
                 <TableCell>Kuantitas</TableCell>
                 <TableCell>Harga Beli Satuan</TableCell>
                 <TableCell>Harga Jual Satuan</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Aksi</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {items.map((customer, index) => {
                 const isSelected = selected.includes(customer.id);
 
-                console.log(customer);
                 return (
                   <TableRow hover key={customer.id} selected={isSelected}>
                     <TableCell padding="checkbox">
@@ -89,6 +93,32 @@ export const StockTable = (props) => {
                     <TableCell>{customer.kuantitas}</TableCell>
                     <TableCell>{getPrice(customer.harga_beli)}</TableCell>
                     <TableCell>{getPrice(customer.harga_jual)}</TableCell>
+                    <TableCell
+                      style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <EditIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                        style={{ backgroundColor: "green", color: "white" }}
+                      >
+                        Ubah
+                      </Button>
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <TrashIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                        style={{ marginLeft: 10, backgroundColor: "red", color: "white" }}
+                      >
+                        Hapus
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}

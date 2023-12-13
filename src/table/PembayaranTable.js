@@ -3,9 +3,11 @@ import { format } from "date-fns";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Checkbox,
   Stack,
+  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -17,6 +19,8 @@ import {
 import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
 import { getPrice } from "src/utils/getPrice";
+import EditIcon from "@heroicons/react/20/solid/PencilSquareIcon";
+import TrashIcon from "@heroicons/react/20/solid/TrashIcon";
 
 export const PembayaranTable = (props) => {
   const {
@@ -61,6 +65,7 @@ export const PembayaranTable = (props) => {
                 <TableCell>Kode Barang</TableCell>
                 <TableCell>Quantity</TableCell>
                 <TableCell>Nominal</TableCell>
+                <TableCell>Aksi</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -86,6 +91,28 @@ export const PembayaranTable = (props) => {
                     <TableCell>{customer.kode}</TableCell>
                     <TableCell>{customer.qty}</TableCell>
                     <TableCell>{customer.nominal}</TableCell>
+                    <TableCell>
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <EditIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <TrashIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}
