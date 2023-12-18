@@ -17,10 +17,14 @@ import {
   Typography,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import { getInitials } from "src/utils/get-initials";
 import { getPrice } from "src/utils/getPrice";
 import EditIcon from "@heroicons/react/20/solid/PencilSquareIcon";
 import TrashIcon from "@heroicons/react/20/solid/TrashIcon";
+import axios from "axios";
+import EditStockModal from "src/components/Modal/EditStockModal";
+import { useState } from "react";
+import StockDetailModal from "src/components/Modal/StockDetailModal";
+import { getToken } from "src/utils/getToken";
 
 export const StockTable = (props) => {
   const {
@@ -35,10 +39,49 @@ export const StockTable = (props) => {
     page = 0,
     rowsPerPage = 0,
     selected = [],
+    setIsLoading,
   } = props;
 
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
+
+  const handleDeleteStock = async (id) => {
+    setIsLoading(true);
+    const { data } = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/stock/${id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+    if (data.success) {
+      setIsLoading(false);
+    } else {
+      helpers.setStatus({ success: false });
+      helpers.setErrors({ submit: data.message });
+      helpers.setSubmitting(false);
+    }
+  };
+
+  const [showEditStockModal, setShowEditStockModal] = useState(false);
+  const [showDetailStockModal, setShowDetailStockModal] = useState(false);
+
+  const [selectedStockId, setSelectedStockId] = useState(0);
+  const [selectedStock, setSelectedStock] = useState();
+
+  const token = getToken();
+
+  const handleEdit = async (id) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/stock/${id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+    if (response?.data?.success) {
+      setSelectedStock(response.data.data);
+      setShowEditStockModal(true);
+    }
+  };
 
   return (
     <Card>
@@ -70,29 +113,29 @@ export const StockTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer, index) => {
-                const isSelected = selected.includes(customer.id);
+              {items.map((stock, index) => {
+                const isSelected = selected.includes(stock.id);
 
                 return (
-                  <TableRow hover key={customer.id} selected={isSelected}>
+                  <TableRow hover key={stock.id} selected={isSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(customer.id);
+                            onSelectOne?.(stock.id);
                           } else {
-                            onDeselectOne?.(customer.id);
+                            onDeselectOne?.(stock.id);
                           }
                         }}
                       />
                     </TableCell>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{customer.nama}</TableCell>
-                    <TableCell>{customer.kode}</TableCell>
-                    <TableCell>{customer.kuantitas}</TableCell>
-                    <TableCell>{getPrice(customer.harga_beli)}</TableCell>
-                    <TableCell>{getPrice(customer.harga_jual)}</TableCell>
+                    <TableCell>{stock.name}</TableCell>
+                    <TableCell>{stock.product_code}</TableCell>
+                    <TableCell>{stock.quantity}</TableCell>
+                    <TableCell>{getPrice(stock.buy_price)}</TableCell>
+                    <TableCell>{getPrice(stock.sell_price)}</TableCell>
                     <TableCell
                       style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
                     >
@@ -103,7 +146,30 @@ export const StockTable = (props) => {
                           </SvgIcon>
                         }
                         variant="contained"
-                        style={{ backgroundColor: "green", color: "white" }}
+                        style={{ backgroundColor: "blue", color: "white" }}
+                        onClick={() => {
+                          setShowDetailStockModal(true);
+                          setSelectedStockId(stock.id);
+                        }}
+                      >
+                        Detail
+                      </Button>
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <EditIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                        style={{
+                          backgroundColor: "green",
+                          color: "white",
+                          marginLeft: 10,
+                          marginRight: 10,
+                        }}
+                        onClick={() => {
+                          handleEdit(stock.id);
+                        }}
                       >
                         Ubah
                       </Button>
@@ -114,7 +180,8 @@ export const StockTable = (props) => {
                           </SvgIcon>
                         }
                         variant="contained"
-                        style={{ marginLeft: 10, backgroundColor: "red", color: "white" }}
+                        style={{ backgroundColor: "red", color: "white" }}
+                        onClick={() => handleDeleteStock(stock.id)}
                       >
                         Hapus
                       </Button>
@@ -135,6 +202,28 @@ export const StockTable = (props) => {
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
+
+      {showEditStockModal && (
+        <EditStockModal
+          open={showEditStockModal}
+          handleClose={() => {
+            setShowEditStockModal(false);
+            setSelectedStock();
+          }}
+          selectedStock={selectedStock}
+        />
+      )}
+
+      {showDetailStockModal && (
+        <StockDetailModal
+          open={showDetailStockModal}
+          handleClose={() => {
+            setShowDetailStockModal(false);
+            setSelectedStockId(0);
+          }}
+          selectedStockId={selectedStockId}
+        />
+      )}
     </Card>
   );
 };

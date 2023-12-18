@@ -1,104 +1,48 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
-import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Stack,
+  SvgIcon,
+  Typography,
+} from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { applyPagination } from "src/utils/apply-pagination";
 import { SearchBar } from "src/components/SearchBar";
 import { PembayaranTable } from "src/table/PembayaranTable";
+import { getToken } from "src/utils/getToken";
+import axios from "axios";
+import moment from "moment";
 
-const data = [
-  {
-    id: 1,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-  {
-    id: 2,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-  {
-    id: 3,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-  {
-    id: 4,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-  {
-    id: 5,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-  {
-    id: 6,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-  {
-    id: 7,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-  {
-    id: 8,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-  {
-    id: 9,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-  {
-    id: 10,
-    invoice: 1001,
-    kode: "123",
-    qty: 10,
-    nominal: 1000,
-  },
-];
-
-const usePayments = (page, rowsPerPage) => {
+const useAccounts = (account, page, rowsPerPage) => {
   return useMemo(() => {
-    return applyPagination(data, page, rowsPerPage);
-  }, [page, rowsPerPage]);
+    return applyPagination(account, page, rowsPerPage);
+  }, [account, page, rowsPerPage]);
 };
 
-const usePaymentIds = (payments) => {
+const useAccountIds = (accounts) => {
   return useMemo(() => {
-    return payments.map((customer) => customer.id);
-  }, [payments]);
+    return accounts.map((account) => account.id);
+  }, [accounts]);
 };
 
 const Page = () => {
+  const [accountData, setAccountData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [searchName, setSearchName] = useState("");
+  const [exportDatas, setExportDatas] = useState([]);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const payments = usePayments(page, rowsPerPage);
-  const paymentsIds = usePaymentIds(payments);
-  const paymentsSelection = useSelection(paymentsIds);
+  const accounts = useAccounts(accountData, page, rowsPerPage);
+  const accountsIds = useAccountIds(accounts);
+  const accountsSelection = useSelection(accountsIds);
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -107,6 +51,42 @@ const Page = () => {
   const handleRowsPerPageChange = useCallback((event) => {
     setRowsPerPage(event.target.value);
   }, []);
+
+  const token = getToken();
+
+  useEffect(() => {
+    setIsLoading(true);
+    const handleFetchSupplier = async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/stock/?name=${searchName}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response?.data?.success) {
+        const exportTitle = [["No", "No. Invoice", "Kode Barang", "Quantity", "Nominal"]];
+
+        response.data.data.length > 0
+          ? response.data.data.map((s, i) => {
+              exportTitle.push([i + 1, s.invoice_no, s.product_code, s.quantity, s.nominal]);
+            })
+          : exportTitle.push([]);
+
+        setExportDatas(exportTitle);
+
+        setAccountData(response.data.data);
+        setIsLoading(false);
+      }
+    };
+    handleFetchSupplier();
+  }, [searchName, token]);
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <>
@@ -153,17 +133,17 @@ const Page = () => {
             </Stack>
             <SearchBar placeholder="Cari Jurnal Pembayaran" />
             <PembayaranTable
-              count={data.length}
-              items={payments}
-              onDeselectAll={paymentsSelection.handleDeselectAll}
-              onDeselectOne={paymentsSelection.handleDeselectOne}
+              count={accountData.length}
+              items={accounts}
+              onDeselectAll={accountsSelection.handleDeselectAll}
+              onDeselectOne={accountsSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={paymentsSelection.handleSelectAll}
-              onSelectOne={paymentsSelection.handleSelectOne}
+              onSelectAll={accountsSelection.handleSelectAll}
+              onSelectOne={accountsSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={paymentsSelection.selected}
+              selected={accountsSelection.selected}
             />
           </Stack>
         </Container>

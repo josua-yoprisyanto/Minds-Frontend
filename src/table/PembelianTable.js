@@ -17,6 +17,7 @@ import {
 import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
 import { getPrice } from "src/utils/getPrice";
+import moment from "moment";
 
 export const PembelianTable = (props) => {
   const {
@@ -66,30 +67,30 @@ export const PembelianTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer, index) => {
-                const isSelected = selected.includes(customer.id);
+              {items.map((account, index) => {
+                const isSelected = selected.includes(account.id);
 
                 return (
-                  <TableRow hover key={customer.id} selected={isSelected}>
+                  <TableRow hover key={account.id} selected={isSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(customer.id);
+                            onSelectOne?.(account.id);
                           } else {
-                            onDeselectOne?.(customer.id);
+                            onDeselectOne?.(account.id);
                           }
                         }}
                       />
                     </TableCell>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{customer.tanggal}</TableCell>
-                    <TableCell>{customer.invoice}</TableCell>
-                    <TableCell>{customer.supplier}</TableCell>
-                    <TableCell>{customer.kode}</TableCell>
-                    <TableCell>{customer.qty}</TableCell>
-                    <TableCell>{customer.status}</TableCell>
+                    <TableCell>{moment(account.buy_date).format("DD MMMM YYYY")}</TableCell>
+                    <TableCell>{account.invoice_no}</TableCell>
+                    <TableCell>{account.supplier.name}</TableCell>
+                    <TableCell>{account.product_code}</TableCell>
+                    <TableCell>{account.quantity}</TableCell>
+                    <TableCell>{account.status}</TableCell>
                   </TableRow>
                 );
               })}

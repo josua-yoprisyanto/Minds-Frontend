@@ -2,29 +2,30 @@ import {
   Autocomplete,
   Box,
   Button,
+  CircularProgress,
   Container,
   Divider,
   FormControl,
   InputLabel,
   MenuItem,
+  Modal,
   Select,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { DatePicker, DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import moment from "moment";
-import Head from "next/head";
-import React, { useEffect, useState } from "react";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useFormik } from "formik";
 import axios from "axios";
+import { useFormik } from "formik";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 import { getToken } from "src/utils/getToken";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as Yup from "yup";
 
-const Page = () => {
+const EditStockModal = ({ open, handleClose, selectedStock }) => {
   const [supplierData, setSupplierData] = useState([]);
+  const [stockDetail, setStockDetail] = useState();
 
   const [selectedSupplier, setSelectedSupplier] = useState(0);
 
@@ -35,15 +36,15 @@ const Page = () => {
 
   const formik = useFormik({
     initialValues: {
-      date: moment(),
-      supplierId: 0,
-      invoiceNo: null,
-      productCode: null,
-      quantity: 0,
-      status: null,
-      buyPrice: 0,
-      sellPrice: 0,
-      name: null,
+      date: moment(selectedStock?.buy_date),
+      supplierId: selectedStock?.supplier_id,
+      invoiceNo: selectedStock?.invoice_no,
+      productCode: selectedStock?.product_code,
+      quantity: selectedStock?.quantity,
+      status: selectedStock?.status,
+      buyPrice: selectedStock?.buy_price,
+      sellPrice: selectedStock?.sell_price,
+      name: selectedStock?.name,
       submit: null,
     },
     validationSchema: Yup.object({
@@ -71,8 +72,8 @@ const Page = () => {
         name: values.name,
       };
 
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/stock/buy`,
+      const { data } = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/stock/${selectedStock.id}`,
         reqBody,
         {
           headers: {
@@ -107,19 +108,36 @@ const Page = () => {
   }, [token]);
 
   return (
-    <>
-      <Head>
-        <title>Pembelian Stock | Minds</title>
-      </Head>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
-      >
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <Container maxWidth="xl">
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <form noValidate onSubmit={formik.handleSubmit}>
+        {console.log({
+          id: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.id,
+          label: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.name,
+        })}
+
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 500,
+            borderRadius: 2,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+            overflowY: "auto",
+          }}
+        >
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
             <Stack spacing={3}>
               <Typography
                 color="neutral.100"
@@ -161,6 +179,10 @@ const Page = () => {
                   id: s.id,
                   label: s.name,
                 }))}
+                value={{
+                  id: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.id,
+                  label: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.name,
+                }}
                 name="supplierId"
                 onBlur={formik.handleBlur}
                 onChange={(event, value) => {
@@ -259,9 +281,9 @@ const Page = () => {
                     type="submit"
                     variant="contained"
                     color="error"
-                    onClick={() => formik.resetForm()}
+                    onClick={() => handleClose()}
                   >
-                    Reset
+                    Close
                   </Button>
                   <Button size="large" sx={{ mt: 3, ml: 1 }} type="submit" variant="contained">
                     Submit
@@ -269,13 +291,11 @@ const Page = () => {
                 </Stack>
               </Box>
             </Stack>
-          </Container>
-        </form>
-      </Box>
-    </>
+          )}
+        </Box>
+      </form>
+    </Modal>
   );
 };
 
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-
-export default Page;
+export default EditStockModal;

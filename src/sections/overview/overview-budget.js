@@ -72,7 +72,7 @@ export const OverviewBudget = (props) => {
         </Stack>
         <Box sx={{ mt: 3 }}>
           <ThemeProvider theme={theme}>
-            <LinearProgress value={100} variant="determinate" color={progressColor} />
+            <LinearProgress value={getPrice(value)} variant="determinate" color={progressColor} />
           </ThemeProvider>
         </Box>
       </CardContent>

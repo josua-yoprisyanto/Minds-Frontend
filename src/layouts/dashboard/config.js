@@ -44,6 +44,15 @@ export const items = [
     ),
   },
   {
+    title: "Stock",
+    path: "/stock",
+    icon: (
+      <SvgIcon fontSize="small">
+        <BoxIcon />
+      </SvgIcon>
+    ),
+  },
+  {
     title: "Jurnal",
     dropdowns: [
       {
@@ -86,15 +95,6 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <BookIcon />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: "Stock",
-    path: "/stock",
-    icon: (
-      <SvgIcon fontSize="small">
-        <BoxIcon />
       </SvgIcon>
     ),
   },

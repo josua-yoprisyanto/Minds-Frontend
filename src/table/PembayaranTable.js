@@ -65,54 +65,31 @@ export const PembayaranTable = (props) => {
                 <TableCell>Kode Barang</TableCell>
                 <TableCell>Quantity</TableCell>
                 <TableCell>Nominal</TableCell>
-                <TableCell>Aksi</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer, index) => {
-                const isSelected = selected.includes(customer.id);
+              {items.map((account, index) => {
+                const isSelected = selected.includes(account.id);
 
                 return (
-                  <TableRow hover key={customer.id} selected={isSelected}>
+                  <TableRow hover key={account.id} selected={isSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(customer.id);
+                            onSelectOne?.(account.id);
                           } else {
-                            onDeselectOne?.(customer.id);
+                            onDeselectOne?.(account.id);
                           }
                         }}
                       />
                     </TableCell>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{customer.invoice}</TableCell>
-                    <TableCell>{customer.kode}</TableCell>
-                    <TableCell>{customer.qty}</TableCell>
-                    <TableCell>{customer.nominal}</TableCell>
-                    <TableCell>
-                      <Button
-                        startIcon={
-                          <SvgIcon fontSize="small">
-                            <EditIcon />
-                          </SvgIcon>
-                        }
-                        variant="contained"
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        startIcon={
-                          <SvgIcon fontSize="small">
-                            <TrashIcon />
-                          </SvgIcon>
-                        }
-                        variant="contained"
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
+                    <TableCell>{account.invoice_no}</TableCell>
+                    <TableCell>{account.product_code}</TableCell>
+                    <TableCell>{account.quantity}</TableCell>
+                    <TableCell>{account.nominal}</TableCell>
                   </TableRow>
                 );
               })}

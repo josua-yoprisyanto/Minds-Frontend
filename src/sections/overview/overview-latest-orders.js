@@ -31,7 +31,7 @@ export const OverviewLatestOrders = (props) => {
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Latest Orders" />
+      <CardHeader title="Latest Transaction" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ minWidth: 800 }}>
           <Table>
@@ -41,7 +41,7 @@ export const OverviewLatestOrders = (props) => {
                 <TableCell>Tanggal</TableCell>
                 <TableCell>Invoice</TableCell>
                 <TableCell>Supplier</TableCell>
-                <TableCell>Akun Persediaan Barang</TableCell>
+                <TableCell>Kode Produk</TableCell>
                 <TableCell>Nominal</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
@@ -54,7 +54,7 @@ export const OverviewLatestOrders = (props) => {
                     <TableCell>{order.tanggal}</TableCell>
                     <TableCell>{order.invoice}</TableCell>
                     <TableCell>{order.supplier}</TableCell>
-                    <TableCell>{order.akun}</TableCell>
+                    <TableCell>{order.kode}</TableCell>
                     <TableCell>{getPrice(order.nominal)}</TableCell>
                     <TableCell>{order.status}</TableCell>
                     {/* <TableCell>{order.ref}</TableCell>

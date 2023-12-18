@@ -1,126 +1,50 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
-import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Stack,
+  SvgIcon,
+  Typography,
+} from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { applyPagination } from "src/utils/apply-pagination";
 import { SearchBar } from "src/components/SearchBar";
 import { StockTable } from "src/table/StockTable";
 import { PembelianTable } from "src/table/PembelianTable";
+import axios from "axios";
+import { getToken } from "src/utils/getToken";
+import moment from "moment";
 
-const data = [
-  {
-    id: 1,
-    tanggal: "2023-10-20",
-    invoice: "INV-001",
-    supplier: "Supplier A",
-    kode: "fw123",
-    qty: 25,
-    status: "ongoing",
-  },
-  {
-    id: 2,
-    tanggal: "2023-10-21",
-    invoice: "INV-002",
-    supplier: "Supplier B",
-    kode: "fw123",
-    qty: 25,
-    status: "pending",
-  },
-  {
-    id: 3,
-    tanggal: "2023-10-22",
-    invoice: "INV-003",
-    supplier: "Supplier C",
-    kode: "fw123",
-    qty: 25,
-    status: "done",
-  },
-  {
-    id: 4,
-    tanggal: "2023-10-23",
-    invoice: "INV-004",
-    supplier: "Supplier D",
-    kode: "fw123",
-    qty: 25,
-    status: "ongoing",
-  },
-  {
-    id: 5,
-    tanggal: "2023-10-24",
-    invoice: "INV-005",
-    supplier: "Supplier E",
-    kode: "fw123",
-    qty: 25,
-    status: "done",
-  },
-  {
-    id: 6,
-    tanggal: "2023-10-25",
-    invoice: "INV-006",
-    supplier: "Supplier F",
-    kode: "fw123",
-    qty: 25,
-    status: "pending",
-  },
-  {
-    id: 7,
-    tanggal: "2023-10-26",
-    invoice: "INV-007",
-    supplier: "Supplier G",
-    kode: "fw123",
-    qty: 25,
-    status: "done",
-  },
-  {
-    id: 8,
-    tanggal: "2023-10-27",
-    invoice: "INV-008",
-    supplier: "Supplier H",
-    kode: "fw123",
-    qty: 25,
-    status: "ongoing",
-  },
-  {
-    id: 9,
-    tanggal: "2023-10-28",
-    invoice: "INV-009",
-    supplier: "Supplier I",
-    kode: "fw123",
-    qty: 25,
-    status: "pending",
-  },
-  {
-    id: 10,
-    tanggal: "2023-10-29",
-    invoice: "INV-010",
-    supplier: "Supplier J",
-    kode: "fw123",
-    qty: 25,
-    status: "done",
-  },
-];
-
-const useBuys = (page, rowsPerPage) => {
+const useAccounts = (account, page, rowsPerPage) => {
   return useMemo(() => {
-    return applyPagination(data, page, rowsPerPage);
-  }, [page, rowsPerPage]);
+    return applyPagination(account, page, rowsPerPage);
+  }, [account, page, rowsPerPage]);
 };
 
-const useBuyIds = (buys) => {
+const useAccountIds = (accounts) => {
   return useMemo(() => {
-    return buys.map((customer) => customer.id);
-  }, [buys]);
+    return accounts.map((account) => account.id);
+  }, [accounts]);
 };
 
 const Page = () => {
+  const [accountData, setAccountData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [searchName, setSearchName] = useState("");
+  const [exportDatas, setExportDatas] = useState([]);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const buys = useBuys(page, rowsPerPage);
-  const buysIds = useBuyIds(buys);
-  const buysSelection = useSelection(buysIds);
+  const accounts = useAccounts(accountData, page, rowsPerPage);
+  const accountsIds = useAccountIds(accounts);
+  const accountsSelection = useSelection(accountsIds);
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -129,6 +53,52 @@ const Page = () => {
   const handleRowsPerPageChange = useCallback((event) => {
     setRowsPerPage(event.target.value);
   }, []);
+
+  const token = getToken();
+
+  useEffect(() => {
+    setIsLoading(true);
+    const handleFetchSupplier = async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/stock/?name=${searchName}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response?.data?.success) {
+        const exportTitle = [
+          ["No", "Tanggal", "Invoice", "Supplier", "Kode Barang", "Quantity", "Status"],
+        ];
+
+        response.data.data.length > 0
+          ? response.data.data.map((s, i) => {
+              exportTitle.push([
+                i + 1,
+                moment(s.buy_date).format("DD MMMM YYYY"),
+                s.invoice_no,
+                s.supplier.name,
+                s.product_code,
+                s.quantity,
+                s.status,
+              ]);
+            })
+          : exportTitle.push([]);
+
+        setExportDatas(exportTitle);
+
+        setAccountData(response.data.data);
+        setIsLoading(false);
+      }
+    };
+    handleFetchSupplier();
+  }, [searchName, token]);
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <>
@@ -175,17 +145,17 @@ const Page = () => {
             </Stack>
             <SearchBar placeholder="Cari Jurnal Pembelian" />
             <PembelianTable
-              count={data.length}
-              items={buys}
-              onDeselectAll={buysSelection.handleDeselectAll}
-              onDeselectOne={buysSelection.handleDeselectOne}
+              count={accountData.length}
+              items={accounts}
+              onDeselectAll={accountsSelection.handleDeselectAll}
+              onDeselectOne={accountsSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={buysSelection.handleSelectAll}
-              onSelectOne={buysSelection.handleSelectOne}
+              onSelectAll={accountsSelection.handleSelectAll}
+              onSelectOne={accountsSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={buysSelection.selected}
+              selected={accountsSelection.selected}
             />
           </Stack>
         </Container>
