@@ -149,7 +149,7 @@ const Page = () => {
                 Jurnal Penjualan
               </Typography>
 
-              <Typography variant="h6">Akun Tambah</Typography>
+              <Typography variant="h6">Kredit</Typography>
 
               <Autocomplete
                 disablePortal
@@ -178,7 +178,7 @@ const Page = () => {
                 value={formik.values.invoiceNo}
               />
 
-              <Typography variant="h6">Akun Kurang</Typography>
+              <Typography variant="h6">Debit</Typography>
 
               <Autocomplete
                 disablePortal

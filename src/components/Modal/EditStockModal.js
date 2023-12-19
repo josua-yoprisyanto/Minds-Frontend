@@ -23,7 +23,7 @@ import { getToken } from "src/utils/getToken";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as Yup from "yup";
 
-const EditStockModal = ({ open, handleClose, selectedStock }) => {
+const EditStockModal = ({ open, handleClose, selectedStock, setIsLoading }) => {
   const [supplierData, setSupplierData] = useState([]);
   const [stockDetail, setStockDetail] = useState();
 
@@ -32,7 +32,7 @@ const EditStockModal = ({ open, handleClose, selectedStock }) => {
   const [status, setStatus] = useState("");
 
   const token = getToken();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -48,15 +48,15 @@ const EditStockModal = ({ open, handleClose, selectedStock }) => {
       submit: null,
     },
     validationSchema: Yup.object({
-      date: Yup.string().max(255).required("Date is required"),
-      supplierId: Yup.number().max(255).required("Supplier is required"),
-      invoiceNo: Yup.string().max(255).required("Invoice is required"),
-      productCode: Yup.string().max(255).required("Product code is required"),
-      quantity: Yup.number().max(255).required("Quantity is required"),
-      status: Yup.string().max(255).required("Status is required"),
-      buyPrice: Yup.number().max(255).required("Buy price is required"),
-      sellPrice: Yup.number().max(255).required("Sell price is required"),
-      name: Yup.string().max(255).required("Name is required"),
+      // date: Yup.string().max(255).required("Date is required"),
+      // supplierId: Yup.number().max(255).required("Supplier is required"),
+      // invoiceNo: Yup.string().max(255).required("Invoice is required"),
+      // productCode: Yup.string().max(255).required("Product code is required"),
+      // quantity: Yup.number().max(255).required("Quantity is required"),
+      // status: Yup.string().max(255).required("Status is required"),
+      // buyPrice: Yup.number().max(255).required("Buy price is required"),
+      // sellPrice: Yup.number().max(255).required("Sell price is required"),
+      // name: Yup.string().max(255).required("Name is required"),
     }),
     onSubmit: async (values, helpers) => {
       setIsLoading(true);
@@ -84,9 +84,13 @@ const EditStockModal = ({ open, handleClose, selectedStock }) => {
 
       if (data.success) {
         formik.resetForm();
+        handleClose();
+        setIsLoadingDetail(false);
+        setIsLoading(false);
       } else {
         console.error("Error submitting form:", error);
         setIsLoading(false);
+        setIsLoadingDetail(false);
         helpers.setSubmitting(false);
       }
     },
@@ -115,11 +119,6 @@ const EditStockModal = ({ open, handleClose, selectedStock }) => {
       aria-describedby="modal-modal-description"
     >
       <form noValidate onSubmit={formik.handleSubmit}>
-        {console.log({
-          id: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.id,
-          label: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.name,
-        })}
-
         <Box
           sx={{
             position: "absolute",
@@ -135,7 +134,7 @@ const EditStockModal = ({ open, handleClose, selectedStock }) => {
             overflowY: "auto",
           }}
         >
-          {isLoading ? (
+          {isLoadingDetail ? (
             <CircularProgress />
           ) : (
             <Stack spacing={3}>

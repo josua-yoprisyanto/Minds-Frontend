@@ -211,6 +211,7 @@ export const StockTable = (props) => {
             setSelectedStock();
           }}
           selectedStock={selectedStock}
+          setIsLoading={setIsLoading}
         />
       )}
 

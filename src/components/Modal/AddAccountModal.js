@@ -13,14 +13,14 @@ const AddAccountModal = ({ open, handleClose, selectedAccount, setIsLoading }) =
       name: selectedAccount?.name || "",
       accountNumber: selectedAccount?.account_number || "",
       type: selectedAccount?.type || "",
-      nominal: selectedAccount?.nominal || "",
+      nominal: selectedAccount?.nominal || 0,
       submit: null,
     },
     validationSchema: Yup.object({
       name: Yup.string().max(255).required("Name is required"),
       accountNumber: Yup.string().max(255).required("Email is required"),
       type: Yup.string().max(255).required("Phone is required"),
-      nominal: Yup.string().max(255).required("Address is required"),
+      nominal: Yup.number().max(255).required("Address is required"),
     }),
     onSubmit: async (values, helpers) => {
       setIsLoading(true);

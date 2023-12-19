@@ -100,7 +100,7 @@ const Page = () => {
       }
     };
     handleFetchSupplier();
-  }, [searchName, token]);
+  }, [searchName, token, isLoading]);
 
   if (isLoading) {
     return <CircularProgress />;

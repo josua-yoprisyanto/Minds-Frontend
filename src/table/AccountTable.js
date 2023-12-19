@@ -21,6 +21,7 @@ import EditIcon from "@heroicons/react/20/solid/PencilSquareIcon";
 import TrashIcon from "@heroicons/react/20/solid/TrashIcon";
 import { getToken } from "src/utils/getToken";
 import axios from "axios";
+import { getPrice } from "src/utils/getPrice";
 
 export const AccountTable = (props) => {
   const {
@@ -109,7 +110,7 @@ export const AccountTable = (props) => {
                     <TableCell>{account.account_number}</TableCell>
                     <TableCell>{account.name}</TableCell>
                     <TableCell>{account.type}</TableCell>
-                    <TableCell>{account.nominal}</TableCell>
+                    <TableCell>{getPrice(account.nominal)}</TableCell>
                     <TableCell
                       style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
                     >
