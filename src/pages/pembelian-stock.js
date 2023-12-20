@@ -47,15 +47,15 @@ const Page = () => {
       submit: null,
     },
     validationSchema: Yup.object({
-      date: Yup.string().max(255).required("Date is required"),
-      supplierId: Yup.number().max(255).required("Supplier is required"),
-      invoiceNo: Yup.string().max(255).required("Invoice is required"),
-      productCode: Yup.string().max(255).required("Product code is required"),
-      quantity: Yup.number().max(255).required("Quantity is required"),
-      status: Yup.string().max(255).required("Status is required"),
-      buyPrice: Yup.number().max(255).required("Buy price is required"),
-      sellPrice: Yup.number().max(255).required("Sell price is required"),
-      name: Yup.string().max(255).required("Name is required"),
+      // date: Yup.string().max(255).required("Date is required"),
+      // supplierId: Yup.number().max(255).required("Supplier is required"),
+      // invoiceNo: Yup.string().max(255).required("Invoice is required"),
+      // productCode: Yup.string().max(255).required("Product code is required"),
+      // quantity: Yup.number().max(255).required("Quantity is required"),
+      // status: Yup.string().max(255).required("Status is required"),
+      // buyPrice: Yup.number().max(255).required("Buy price is required"),
+      // sellPrice: Yup.number().max(255).required("Sell price is required"),
+      // name: Yup.string().max(255).required("Name is required"),
     }),
     onSubmit: async (values, helpers) => {
       setIsLoading(true);
@@ -167,6 +167,14 @@ const Page = () => {
                   formik.handleChange(event);
                   formik.setFieldValue("supplierId", value?.id);
                 }}
+                value={
+                  formik.values.supplierId
+                    ? {
+                        id: supplierData.find((sd) => sd.id === formik.values.supplierId)?.id,
+                        label: supplierData.find((sd) => sd.id === formik.values.supplierId)?.name,
+                      }
+                    : null
+                }
                 renderInput={(params) => <TextField {...params} label="Supplier" />}
               />
 

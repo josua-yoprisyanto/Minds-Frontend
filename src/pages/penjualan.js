@@ -20,6 +20,7 @@ import { PenjualanTable } from "src/table/PenjualanTable";
 import axios from "axios";
 import { getToken } from "src/utils/getToken";
 import moment from "moment";
+import { CSVLink } from "react-csv";
 
 const useAccounts = (account, page, rowsPerPage) => {
   return useMemo(() => {
@@ -122,7 +123,9 @@ const Page = () => {
                       </SvgIcon>
                     }
                   >
-                    Export
+                    <CSVLink style={{ textDecoration: "none" }} data={exportDatas}>
+                      Export
+                    </CSVLink>
                   </Button>
                 </Stack>
               </Stack>

@@ -37,10 +37,12 @@ const Page = () => {
 
   const formik = useFormik({
     initialValues: {
-      accountIdAdd: 0,
+      accountIdAdd: null,
+      accountNameAdd: null,
       nominalAdd: 0,
-      accountIdSubtract: 0,
+      accountIdSubtract: null,
       nominalSubtract: 0,
+      accountNameSubtract: null,
       stocks: [
         {
           stockId: 0,
@@ -165,6 +167,14 @@ const Page = () => {
                   formik.handleChange(event);
                   formik.setFieldValue("accountIdAdd", value?.id);
                 }}
+                value={
+                  formik.values.accountIdAdd
+                    ? {
+                        id: accountData.find((sd) => sd.id === formik.values.accountIdAdd)?.id,
+                        label: accountData.find((sd) => sd.id === formik.values.accountIdAdd)?.name,
+                      }
+                    : null
+                }
                 renderInput={(params) => <TextField {...params} label="Account" />}
               />
               <TextField
@@ -175,7 +185,7 @@ const Page = () => {
                 type="text"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.invoiceNo}
+                value={formik.values.nominalAdd}
               />
 
               <Typography variant="h6">Debit</Typography>
@@ -194,8 +204,18 @@ const Page = () => {
                   formik.handleChange(event);
                   formik.setFieldValue("accountIdSubtract", value?.id);
                 }}
+                value={
+                  formik.values.accountIdSubtract
+                    ? {
+                        id: accountData.find((sd) => sd.id === formik.values.accountIdSubtract)?.id,
+                        label: accountData.find((sd) => sd.id === formik.values.accountIdSubtract)
+                          ?.name,
+                      }
+                    : null
+                }
                 renderInput={(params) => <TextField {...params} label="Account" />}
               />
+
               <TextField
                 sx={{ mt: 1 }}
                 fullWidth
@@ -204,12 +224,12 @@ const Page = () => {
                 type="text"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.invoiceNo}
+                value={formik.values.nominalSubtract}
               />
 
               <Typography variant="h6">Stock</Typography>
 
-              {formik.values.stocks.map((item, index) => (
+              {formik.values.stocks.map((stock, index) => (
                 <Grid container key={index}>
                   <Grid item xs={10} md={10} lg={10}>
                     <Autocomplete
@@ -226,6 +246,14 @@ const Page = () => {
                         formik.handleChange(event);
                         formik.setFieldValue(`stocks.${index}.stockId`, value?.id);
                       }}
+                      value={
+                        stock.stockId
+                          ? {
+                              id: stockData.find((sd) => sd.id === stock.stockId)?.id,
+                              label: stockData.find((sd) => sd.id === stock.stockId)?.name,
+                            }
+                          : null
+                      }
                       renderInput={(params) => <TextField {...params} label="Stock" />}
                     />
                   </Grid>
@@ -267,10 +295,11 @@ const Page = () => {
                   <Button
                     size="large"
                     sx={{ mt: 3, mr: 1 }}
-                    type="submit"
                     variant="contained"
                     color="error"
-                    onClick={() => formik.resetForm()}
+                    onClick={() => {
+                      formik.resetForm();
+                    }}
                   >
                     Reset
                   </Button>

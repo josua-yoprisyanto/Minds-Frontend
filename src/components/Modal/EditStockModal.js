@@ -178,10 +178,14 @@ const EditStockModal = ({ open, handleClose, selectedStock, setIsLoading }) => {
                   id: s.id,
                   label: s.name,
                 }))}
-                value={{
-                  id: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.id,
-                  label: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.name,
-                }}
+                value={
+                  selectedStock.supplier_id
+                    ? {
+                        id: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.id,
+                        label: supplierData.find((sd) => sd.id === selectedStock.supplier_id)?.name,
+                      }
+                    : null
+                }
                 name="supplierId"
                 onBlur={formik.handleBlur}
                 onChange={(event, value) => {

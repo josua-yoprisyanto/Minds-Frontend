@@ -18,6 +18,7 @@ import { SearchBar } from "src/components/SearchBar";
 import { StockTable } from "src/table/StockTable";
 import { getToken } from "src/utils/getToken";
 import axios from "axios";
+import { CSVLink } from "react-csv";
 
 const useStocks = (stock, page, rowsPerPage) => {
   return useMemo(() => {
@@ -132,7 +133,9 @@ const Page = () => {
                       </SvgIcon>
                     }
                   >
-                    Export
+                    <CSVLink style={{ textDecoration: "none" }} data={exportDatas}>
+                      Export
+                    </CSVLink>
                   </Button>
                 </Stack>
               </Stack>
