@@ -48,7 +48,7 @@ export const SupplierTable = (props) => {
 
   const handleDeleteSupplier = async (id) => {
     setIsLoading(true);
-    const { data } = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/stock/${id}`, {
+    const { data } = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/supplier/${id}`, {
       headers: {
         Authorization: token,
       },

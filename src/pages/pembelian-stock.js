@@ -2,6 +2,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  CircularProgress,
   Container,
   Divider,
   FormControl,
@@ -58,7 +59,8 @@ const Page = () => {
       // name: Yup.string().max(255).required("Name is required"),
     }),
     onSubmit: async (values, helpers) => {
-      setIsLoading(true);
+      // setIsLoading(true);
+
       const reqBody = {
         date: moment(values.date).format("YYYY-MM-DD"),
         supplierId: values.supplierId,
@@ -83,6 +85,7 @@ const Page = () => {
 
       if (data.success) {
         formik.resetForm();
+        setIsLoading(false);
       } else {
         console.error("Error submitting form:", error);
         setIsLoading(false);

@@ -109,7 +109,7 @@ export const OverviewTraffic = (props) => {
                   {label}
                 </Typography>
                 <Typography color="text.secondary" variant="subtitle2">
-                  {item}%
+                  {Math.round(item)}%
                 </Typography>
               </Box>
             );
