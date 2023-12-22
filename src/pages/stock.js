@@ -40,6 +40,7 @@ const Page = () => {
   const [exportDatas, setExportDatas] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [screenLoading, setScreenLoading] = useState(true);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -98,12 +99,13 @@ const Page = () => {
 
         setStockData(response.data.data);
         setIsLoading(false);
+        setScreenLoading(false);
       }
     };
     handleFetchSupplier();
   }, [searchName, token, isLoading]);
 
-  if (isLoading) {
+  if (isLoading && screenLoading) {
     return <CircularProgress />;
   }
 
@@ -140,7 +142,7 @@ const Page = () => {
                 </Stack>
               </Stack>
             </Stack>
-            <SearchBar placeholder="Cari Stock" />
+            <SearchBar placeholder="Cari Stock" onChange={setSearchName} value={searchName} />
             <StockTable
               count={stockData.length}
               items={stocks}

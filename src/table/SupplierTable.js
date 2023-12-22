@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   Checkbox,
+  CircularProgress,
   Stack,
   SvgIcon,
   Table,
@@ -39,6 +40,7 @@ export const SupplierTable = (props) => {
     selected = [],
     setIsLoading,
     handleEditSupplier,
+    isLoading,
   } = props;
 
   const selectedSome = selected.length > 0 && selected.length < items.length;

@@ -38,6 +38,8 @@ const Page = () => {
   const [accountData, setAccountData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [screenLoading, setScreenLoading] = useState(true);
+
   const [searchName, setSearchName] = useState("");
   const [exportDatas, setExportDatas] = useState([]);
 
@@ -88,12 +90,13 @@ const Page = () => {
 
         setAccountData(response.data.data);
         setIsLoading(false);
+        setScreenLoading(false);
       }
     };
     handleFetchSupplier();
   }, [searchName, token]);
 
-  if (isLoading) {
+  if (isLoading && screenLoading) {
     return <CircularProgress />;
   }
 
@@ -142,7 +145,11 @@ const Page = () => {
                 </Button>
               </div> */}
             </Stack>
-            <SearchBar placeholder="Cari Jurnal Penjualan" />
+            <SearchBar
+              placeholder="Cari Jurnal Penjualan"
+              onChange={setSearchName}
+              value={searchName}
+            />
             <PenjualanTable
               count={accountData.length}
               items={accounts}

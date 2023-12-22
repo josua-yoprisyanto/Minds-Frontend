@@ -40,6 +40,7 @@ const Page = () => {
   const [exportDatas, setExportDatas] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [screenLoading, setScreenLoading] = useState(true);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -58,9 +59,6 @@ const Page = () => {
   const [openAccountModal, setOpenAccountModal] = useState(false);
 
   const token = getToken();
-
-  console.log(accountData);
-  console.log(accounts);
 
   useEffect(() => {
     setIsLoading(true);
@@ -84,6 +82,7 @@ const Page = () => {
 
         setAccountData(response.data.data);
         setIsLoading(false);
+        setScreenLoading(false);
       }
     };
     handleFetchAccount();
@@ -100,7 +99,7 @@ const Page = () => {
     setOpenAccountModal(true);
   };
 
-  if (isLoading) {
+  if (isLoading && screenLoading) {
     return <CircularProgress />;
   }
 
@@ -150,7 +149,7 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <SearchBar placeholder="Cari Daftar Akun" />
+            <SearchBar placeholder="Cari Daftar Akun" onChange={setSearchName} value={searchName} />
             <AccountTable
               count={accountData.length}
               items={accounts}

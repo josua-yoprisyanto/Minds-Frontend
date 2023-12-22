@@ -41,6 +41,7 @@ const Page = () => {
   const [exportDatas, setExportDatas] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [screenLoading, setScreenLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const suppliers = useSuppliers(supplierData, page, rowsPerPage);
@@ -84,6 +85,7 @@ const Page = () => {
 
         setSupplierData(response.data.data);
         setIsLoading(false);
+        setScreenLoading(false);
       }
     };
     handleFetchSupplier();
@@ -100,7 +102,7 @@ const Page = () => {
     setOpenSupplierModal(true);
   };
 
-  if (isLoading) {
+  if (isLoading && screenLoading) {
     return <CircularProgress />;
   }
 
@@ -150,11 +152,7 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <SearchBar
-              placeholder="Cari Supplier"
-              onChange={(e) => setSearchName(e.target.value)}
-              value={searchName}
-            />
+            <SearchBar placeholder="Cari Supplier" onChange={setSearchName} value={searchName} />
             <SupplierTable
               count={supplierData.length}
               items={suppliers}

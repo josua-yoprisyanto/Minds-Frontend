@@ -7,10 +7,8 @@ export const SearchBar = (props) => {
   const [searchValue, setSearchValue] = useState("");
 
   const handleInputChange = (e) => {
+    onChange(e.target.value);
     setSearchValue(e.target.value);
-    if (onChange) {
-      onChange(e);
-    }
   };
 
   return (
@@ -18,8 +16,8 @@ export const SearchBar = (props) => {
       <OutlinedInput
         fullWidth
         placeholder={placeholder}
-        value={value}
-        onChange={handleInputChange}
+        value={searchValue}
+        onChange={(e) => handleInputChange(e)}
         startAdornment={
           <InputAdornment position="start">
             <SvgIcon color="action" fontSize="small">

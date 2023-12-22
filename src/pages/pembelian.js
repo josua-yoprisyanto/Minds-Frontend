@@ -37,6 +37,7 @@ const useAccountIds = (accounts) => {
 const Page = () => {
   const [accountData, setAccountData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [screenLoading, setScreenLoading] = useState(true);
 
   const [searchName, setSearchName] = useState("");
   const [exportDatas, setExportDatas] = useState([]);
@@ -92,15 +93,15 @@ const Page = () => {
 
         setAccountData(response.data.data);
         setIsLoading(false);
+        setScreenLoading(false);
       }
     };
     handleFetchSupplier();
   }, [searchName, token]);
 
-  if (isLoading) {
+  if (isLoading && screenLoading) {
     return <CircularProgress />;
   }
-
   return (
     <>
       <Head>
@@ -146,7 +147,11 @@ const Page = () => {
                 </Button>
               </div> */}
             </Stack>
-            <SearchBar placeholder="Cari Jurnal Pembelian" />
+            <SearchBar
+              placeholder="Cari Jurnal Pembelian"
+              onChange={setSearchName}
+              value={searchName}
+            />
             <PembelianTable
               count={accountData.length}
               items={accounts}
