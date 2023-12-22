@@ -58,6 +58,8 @@ export const PenjualanTable = (props) => {
                   />
                 </TableCell>
                 <TableCell>No</TableCell>
+                <TableCell>Nama Barang</TableCell>
+
                 <TableCell>Tanggal</TableCell>
                 <TableCell>Nomor Transaksi</TableCell>
                 <TableCell>Kode Barang</TableCell>
@@ -83,6 +85,8 @@ export const PenjualanTable = (props) => {
                       />
                     </TableCell>
                     <TableCell>{index + 1}</TableCell>
+                    <TableCell>{account.stock.name}</TableCell>
+
                     <TableCell>{moment(account.created_at).format("DD MMMM YYYY")}</TableCell>
                     <TableCell>{account.transaction_no}</TableCell>
                     <TableCell>{account.stock.product_code}</TableCell>

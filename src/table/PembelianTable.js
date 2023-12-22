@@ -58,6 +58,8 @@ export const PembelianTable = (props) => {
                   />
                 </TableCell>
                 <TableCell>No</TableCell>
+                <TableCell>Nama Barang</TableCell>
+
                 <TableCell>Tanggal</TableCell>
                 <TableCell>Invoice</TableCell>
                 <TableCell>Supplier</TableCell>
@@ -85,6 +87,8 @@ export const PembelianTable = (props) => {
                       />
                     </TableCell>
                     <TableCell>{index + 1}</TableCell>
+                    <TableCell>{account.stock.name}</TableCell>
+
                     <TableCell>{moment(account.buy_date).format("DD MMMM YYYY")}</TableCell>
                     <TableCell>{account.invoice_no}</TableCell>
                     <TableCell>{account.supplier.name}</TableCell>

@@ -61,6 +61,7 @@ export const PembayaranTable = (props) => {
                   />
                 </TableCell>
                 <TableCell>No</TableCell>
+                <TableCell>Nama Barang</TableCell>
                 <TableCell>No. Invoice</TableCell>
                 <TableCell>Kode Barang</TableCell>
                 <TableCell>Quantity</TableCell>
@@ -86,6 +87,7 @@ export const PembayaranTable = (props) => {
                       />
                     </TableCell>
                     <TableCell>{index + 1}</TableCell>
+                    <TableCell>{account.stock.name}</TableCell>
                     <TableCell>{account.invoice_no}</TableCell>
                     <TableCell>{account.product_code}</TableCell>
                     <TableCell>{account.quantity}</TableCell>

@@ -58,6 +58,8 @@ export const PenerimaanTable = (props) => {
                   />
                 </TableCell>
                 <TableCell>No</TableCell>
+                <TableCell>Nama Barang</TableCell>
+
                 <TableCell>Nomor Transaksi</TableCell>
                 <TableCell>Kode Barang</TableCell>
                 <TableCell>Quantity</TableCell>
@@ -83,6 +85,8 @@ export const PenerimaanTable = (props) => {
                       />
                     </TableCell>
                     <TableCell>{index + 1}</TableCell>
+                    <TableCell>{account.stock.name}</TableCell>
+
                     <TableCell>{account.transaction_no}</TableCell>
                     <TableCell>{account.stock.product_code}</TableCell>
                     <TableCell>{account.quantity}</TableCell>
