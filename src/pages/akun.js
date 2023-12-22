@@ -65,11 +65,14 @@ const Page = () => {
   useEffect(() => {
     setIsLoading(true);
     const handleFetchAccount = async () => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/account/`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/account?name=${searchName}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
       if (response?.data?.success) {
         const exportTitle = [["No Akun", "Nama", "Tipe", "Nominal"]];
@@ -88,7 +91,7 @@ const Page = () => {
       }
     };
     handleFetchAccount();
-  }, [token, isLoading]);
+  }, [token, isLoading, searchName]);
 
   const handleEditAccount = async (id) => {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/account/${id}`, {
