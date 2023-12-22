@@ -37,6 +37,8 @@ const Page = () => {
   const [accountData, setAccountData] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState(0);
 
+  const [searchName, setSearchName] = useState("");
+
   const [exportDatas, setExportDatas] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
