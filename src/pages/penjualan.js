@@ -72,12 +72,15 @@ const Page = () => {
       );
 
       if (response?.data?.success) {
-        const exportTitle = [["No", "Tanggal", "Nomor Transaksi", "Kode Barang", "Quantity"]];
+        const exportTitle = [
+          ["No", "Nama Barang", "Tanggal", "Nomor Transaksi", "Kode Barang", "Quantity"],
+        ];
 
         response.data.data.length > 0
           ? response.data.data.map((s, i) => {
               exportTitle.push([
                 i + 1,
+                s.stock.name,
                 moment(s.created_at).format("DD MMMM YYYY"),
                 s.transaction_no,
                 s.stock.product_code,

@@ -69,11 +69,20 @@ const Page = () => {
       );
 
       if (response?.data?.success) {
-        const exportTitle = [["No", "No. Invoice", "Kode Barang", "Quantity", "Nominal"]];
+        const exportTitle = [
+          ["No", "Nama Barang", "No. Invoice", "Kode Barang", "Quantity", "Nominal"],
+        ];
 
         response.data.data.length > 0
           ? response.data.data.map((s, i) => {
-              exportTitle.push([i + 1, s.invoice_no, s.product_code, s.quantity, s.nominal]);
+              exportTitle.push([
+                i + 1,
+                s.name,
+                s.invoice_no,
+                s.product_code,
+                s.quantity,
+                s.nominal,
+              ]);
             })
           : exportTitle.push([]);
 

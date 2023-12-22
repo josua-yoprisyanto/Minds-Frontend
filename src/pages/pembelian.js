@@ -72,13 +72,23 @@ const Page = () => {
 
       if (response?.data?.success) {
         const exportTitle = [
-          ["No", "Tanggal", "Invoice", "Supplier", "Kode Barang", "Quantity", "Status"],
+          [
+            "No",
+            "Nama Barang",
+            "Tanggal",
+            "Invoice",
+            "Supplier",
+            "Kode Barang",
+            "Quantity",
+            "Status",
+          ],
         ];
 
         response.data.data.length > 0
           ? response.data.data.map((s, i) => {
               exportTitle.push([
                 i + 1,
+                s.name,
                 moment(s.buy_date).format("DD MMMM YYYY"),
                 s.invoice_no,
                 s.supplier.name,
